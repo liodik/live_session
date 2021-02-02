@@ -7,7 +7,7 @@ class UsersList extends Component {
     super(props);
     this.state = {
       currentPage: 1,
-      itemPerPage: 3,
+      itemsPerPage: 3,
     };
   }
 
@@ -23,10 +23,10 @@ class UsersList extends Component {
   };
   render() {
     const { users } = this.props;
-    const { currentPage, itemPerPage } = this.state;
+    const { currentPage, itemsPerPage } = this.state;
 
-    const start = (currentPage - 1) * itemPerPage;
-    const usersToDispaly = users.slice(start, start + itemPerPage);
+    const start = (currentPage - 1) * itemsPerPage;
+    const usersToDispaly = users.slice(start, start + itemsPerPage);
 
     return (
       <div>
@@ -35,7 +35,7 @@ class UsersList extends Component {
           goNext={this.goNext}
           currentPage={currentPage}
           totalItems={users.length}
-          itemPerPage={itemPerPage}
+          itemsPerPage={itemsPerPage}
         />
         <ul className="users">
           {usersToDispaly.map(user => (
