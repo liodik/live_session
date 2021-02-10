@@ -1,38 +1,54 @@
 import React, { Component } from 'react';
 
+// algo
+// 1. create empty state
+// 2. make http call, componentDidMount && update state
+// 3.  handle UserID
+
 class User extends Component {
-  state = {
-    userData: null,
-  };
-  fetchUser = userId => {
-    fetch(`https://api.github.com${userId}`)
+  constructor(props) {
+    super(props);
+    this.state = {
+      avatar: null,
+      name: null,
+      location: null,
+    };
+  }
+  getUserData = userId => {
+    fetch(`https://api.github.com/users/${userId}`)
       .then(response => response.json())
-      .then(userData =>
+      .then(userData => {
+        const { avatar_url, name, location } = userData;
         this.setState({
-          userData,
-        })
-      );
+          avatar: avatar_url,
+          name,
+          location,
+        });
+      });
+
+    // TODO make error handler
   };
+
   componentDidMount() {
-    this.fetchUser(this.props.match.url);
+    this.getUserData(this.props.match.params.userId);
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.url !== prevProps.match.url) {
-      this.fetchUser(this.props.match.url);
+    if (this.props.match.params.userId !== prevProps.match.params.userId) {
+      this.getUserData(this.props.match.params.userId);
     }
   }
   render() {
-    const { userData } = this.state;
-
-    if (!userData) return null;
-
+    const { avatar, name, location } = this.state;
+    if (!avatar || !name || !location) {
+      return null;
+    }
     return (
       <div className="user">
-        <img alt="User Avatar" src={userData.avatar_url} className="user__avatar" />
+        <img alt="User Avatar" src={avatar} className="user__avatar" />
         <div className="user__info">
-          <span className="user__name">{userData.name}</span>
-          <span className="user__location">{userData.location}</span>
+          <span className="user__name">{name}</span>
+          <span className="user__location">{location}</span>
         </div>
       </div>
     );
